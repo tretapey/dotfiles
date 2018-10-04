@@ -18,15 +18,17 @@ Features:
 
 ### install.sh
 
+This script will install some usefull vim plugins
+
 Create pack folder: `mkdir ~/.vim/pack`
 
 Put install.sh file into that folder
 
 Give permissions: `chmod +x ~/.vim/pack/install.sh`
 
-Run script: `bash ~/.vim/pack/install.sh`
+Run script: `~/.vim/pack/install.sh`
 
-This script will install some usefull vim plugins
+NOTE: Every time you want to update your plugins run the script again.
 
 ### tmux.conf
 
