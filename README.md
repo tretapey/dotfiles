@@ -22,6 +22,8 @@ Create pack folder: `mkdir ~/.vim/pack`
 
 Put install.sh file into that folder
 
+Give permissions: `chmod +x ~/.vim/pack/install.sh`
+
 Run script: `bash ~/.vim/pack/install.sh`
 
 This script will install some usefull vim plugins
