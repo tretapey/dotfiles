@@ -1,6 +1,6 @@
 # dotfiles
 
-Starting my list of dotfiles
+Starting my list of dotfiles and others
 
 ## Files and Instructions
 
