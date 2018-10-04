@@ -4,7 +4,7 @@ Starting my list of dotfiles
 
 ## Files and Instructions
 
-* vimrc
+### vimrc
 
 Install VIM with your package manager.
 
@@ -16,7 +16,7 @@ Features:
 - Space-y to copy to system clipboard and Space-p to paste from system clipboard
 - Check more comments and mapping into the .vimrc file...
 
-* install.sh
+### install.sh
 
 Create pack folder: `mkdir ~/.vim/pack`
 
@@ -26,7 +26,7 @@ Run script: `bash ~/.vim/pack/install.sh`
 
 This script will install some usefull vim plugins
 
-* tmux.conf
+### tmux.conf
 
 Install tmux with your package manager
 
