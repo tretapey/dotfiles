@@ -53,7 +53,6 @@ set t_Co=256
 if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
   set t_Co=16
 endif
-"
 
 set tabstop=2
 set shiftwidth=2
@@ -74,6 +73,7 @@ set ignorecase
 set smartcase
 set hlsearch
 
+"Markdown syntax
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 
@@ -95,7 +95,7 @@ map <Leader>p "+p
 "window mode mapping
 map <Leader>w <C-w>
 
-"sessions
+"sessions [totally optional]
 map <Leader>s :source ~/.vim/sessions/
 map <Leader>S :mks! ~/.vim/sessions/
 
@@ -103,50 +103,33 @@ map <Leader>S :mks! ~/.vim/sessions/
 let g:netrw_banner=0        " disable banner
 let g:netrw_liststyle=3     " tree view
 let g:netrw_altv=1          " open splits to the right
-let g:netrw_browse_split=4  " open in prior window
-let g:netrw_winsize = 20    " width of the explorer
-
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
-let g:NetrwIsOpen=0
+"Quick file explore
+map <Leader>e :Explore<CR>
 
-function! ToggleNetrw()
-    if g:NetrwIsOpen
-        let i = bufnr("$")
-        while (i >= 1)
-            if (getbufvar(i, "&filetype") == "netrw")
-                silent exe "bwipeout " . i 
-            endif
-            let i-=1
-        endwhile
-        let g:NetrwIsOpen=0
-    else
-        let g:NetrwIsOpen=1
-        silent Lexplore
-    endif
-endfunction
-"Leader + e to toggle explorer
-map <Leader>e :call ToggleNetrw()<CR>
+"Quick tab open
+map <Leader>t :tabedit<CR>
 
 " Per default, netrw leaves unmodified buffers open. This autocommand
 " deletes netrw's buffer once it's hidden (using ':q', for example)
-autocmd FileType netrw setl bufhidden=delete
+"autocmd FileType netrw setl bufhidden=delete
 
-"fuzzy find
 set path+=**
 set wildmenu
 
+"fuzzy find
 map <Leader>f :find<Space> 
 
-"search buffers and open
+"Search buffers and open
 nnoremap <Leader>b :buffer<Space>
-"switch buffers
+"Control buffers
 map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
 
-"find in folder
+"Find in folder (check pwd) vim-ack plugin needed
 cnoreabbrev Ack Ack!
 nnoremap <Leader>a :Ack!<Space>
 
