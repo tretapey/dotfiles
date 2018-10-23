@@ -41,6 +41,9 @@ set_group myplugins
 package https://github.com/ervandew/supertab &
 package https://github.com/tpope/vim-fugitive &
 package https://github.com/scrooloose/nerdcommenter &
+#package https://github.com/scrooloose/nerdtree &
+#package https://github.com/Xuyuanp/nerdtree-git-plugin &
+#package https://github.com/tyok/nerdtree-ack &
 package https://github.com/vim-syntastic/syntastic &
 package https://github.com/vim-airline/vim-airline &
 package https://github.com/vim-airline/vim-airline-themes &
