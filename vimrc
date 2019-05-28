@@ -60,10 +60,10 @@ set softtabstop=2
 set expandtab
 set number
 
-set foldmethod=indent
-set foldnestmax=10
-set nofoldenable
-set foldlevel=1
+"set foldmethod=indent
+"set foldnestmax=10
+"set nofoldenable
+"set foldlevel=1
 
 set nowrap
 set copyindent
@@ -126,9 +126,9 @@ map <Leader>f :find<Space>
 "Search buffers and open
 nnoremap <Leader>b :buffer<Space>
 "Control buffers
-map gn :bn<cr>
-map gp :bp<cr>
-map gd :bd<cr>
+map <Leader>gn :bn<cr>
+map <Leader>gp :bp<cr>
+map <Leader>gd :bd<cr>
 
 "Find in folder (check pwd) vim-ack plugin needed
 cnoreabbrev Ack Ack!
