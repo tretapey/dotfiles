@@ -39,24 +39,17 @@ function package () {
 (
 set_group myplugins
 package https://github.com/ervandew/supertab &
-package https://github.com/tpope/vim-fugitive &
-package https://github.com/scrooloose/nerdcommenter &
-#package https://github.com/scrooloose/nerdtree &
-#package https://github.com/Xuyuanp/nerdtree-git-plugin &
-#package https://github.com/tyok/nerdtree-ack &
+package https://github.com/Raimondi/delimitMate &
+package https://github.com/mattn/emmet-vim &
 package https://github.com/vim-syntastic/syntastic &
 package https://github.com/vim-airline/vim-airline &
 package https://github.com/vim-airline/vim-airline-themes &
 package https://github.com/mileszs/ack.vim &
 package https://github.com/tpope/vim-surround &
-package https://github.com/pangloss/vim-javascript &
-package https://github.com/jelera/vim-javascript-syntax &
-package https://github.com/posva/vim-vue &
-package https://github.com/mattn/emmet-vim &
-package https://github.com/Raimondi/delimitMate &
+package https://github.com/sheerun/vim-polyglot &
+package https://github.com/scrooloose/nerdcommenter &
+package https://github.com/tpope/vim-fugitive &
 package https://github.com/airblade/vim-gitgutter &
-package https://github.com/mxw/vim-jsx &
-package https://github.com/cakebaker/scss-syntax.vim &
 wait
 ) &
 
