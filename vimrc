@@ -11,6 +11,8 @@ if has('syntax') && !exists('g:syntax_on')
   syntax enable
 endif
 
+colorscheme default
+
 set autoindent
 set backspace=indent,eol,start
 set complete-=i
