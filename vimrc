@@ -113,7 +113,7 @@ let g:netrw_list_hide=',\(^\|\s\s\)\zs\.\S\+'
 map <Leader>e :Explore<CR>
 
 "Quick tab open
-map <Leader>t :tabedit<CR>
+map <Leader>t :tabedit<Space>
 
 " Per default, netrw leaves unmodified buffers open. This autocommand
 " deletes netrw's buffer once it's hidden (using ':q', for example)
