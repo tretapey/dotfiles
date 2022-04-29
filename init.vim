@@ -49,10 +49,6 @@ map <Leader>e :Explore<CR>
 "Quick tab open
 map <Leader>t :tabedit<Space>
 
-" Per default, netrw leaves unmodified buffers open. This autocommand
-" deletes netrw's buffer once it's hidden (using ':q', for example)
-autocmd FileType netrw setl bufhidden=delete
-
 set path+=**
 set wildmenu wildmode=list:longest,full
 
