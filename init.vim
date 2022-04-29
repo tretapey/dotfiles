@@ -25,6 +25,9 @@ set foldlevelstart=1
 
 set cursorline
 
+set splitbelow
+set splitright
+
 "quick save
 map <Esc><Esc> :w<CR>
 
@@ -65,4 +68,6 @@ map <Leader>gd :bd<cr>
 
 "Search in files
 map <Leader>F :grep -R<Space>
+map <Leader>t <C-w>s:terminal<cr>
 
+tnoremap <Esc> <C-\><C-n>
