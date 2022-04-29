@@ -20,7 +20,7 @@ Optional install coc.vim for completion, github copilot for IA help and vim-poly
 
 ### install.sh (bash script)
 
-This script will install some usefull vim plugins
+This script will install your vim plugins
 
 Create pack folder: `mkdir ~/.vim/pack`
 
@@ -31,10 +31,4 @@ Give permissions: `chmod +x ~/.vim/pack/install.sh`
 Run script: `~/.vim/pack/install.sh`
 
 NOTE: Every time you want to update your plugins run the script again.
-
-### tmux.conf (dotfile)
-
-Install tmux with your package manager
-
-Create/Copy tmux.conf: `vim ~/.tmux.conf`
 
