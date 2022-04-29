@@ -35,3 +35,11 @@ NOTE: Every time you want to update your plugins run the script again.
 Install tmux with your package manager
 
 Create/Copy tmux.conf: `vim ~/.tmux.conf`
+
+### init.vim
+
+Install neovim with package manager
+
+Create/Copy init.vim into `~/.config/nvim/init.vim`
+
+Optional install coc.vim for completion and github copilot
