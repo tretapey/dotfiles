@@ -16,7 +16,7 @@ Install neovim with package manager
 
 Create/Copy init.vim into `~/.config/nvim/init.vim`
 
-Optional install coc.vim for completion, github copilot for IA help and vim-polyglot for language syntax
+Optional install coc.vim for completion and github copilot for IA help.
 
 ### install.sh (bash script)
 
