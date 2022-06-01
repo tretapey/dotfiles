@@ -44,6 +44,7 @@ package https://github.com/preservim/nerdcommenter.git &
 package https://github.com/tpope/vim-fugitive &
 package https://github.com/tpope/vim-rhubarb &
 package https://github.com/APZelos/blamer.nvim &
+package https://github.com/vim-airline/vim-airline &
 wait
 ) &
 
