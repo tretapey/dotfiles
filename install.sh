@@ -41,6 +41,9 @@ set_group plugins
 package https://github.com/sheerun/vim-polyglot &
 package https://github.com/tpope/vim-surround &
 package https://github.com/preservim/nerdcommenter.git &
+package https://github.com/tpope/vim-fugitive &
+package https://github.com/tpope/vim-rhubarb &
+package https://github.com/APZelos/blamer.nvim &
 wait
 ) &
 
