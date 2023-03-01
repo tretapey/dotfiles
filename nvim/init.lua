@@ -508,7 +508,7 @@ vim.g.copilot_assume_mapped = true
 -- Custom keymaps
 vim.keymap.set('n', '<Leader>w', '<C-w>', { silent = true })
 vim.keymap.set('n', '<Esc><Esc>', ':w<CR>', { silent = true })
-vim.keymap.set('n', '<Leader>e', ':Explore<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>e', ':Neotree<CR>', { silent = true })
 
 -- Keymap to run eslint on the current file
 vim.api.nvim_set_keymap('n', '<leader>f', 'mF:%!eslint_d --stdin --fix-to-stdout<CR>`F',
@@ -526,13 +526,6 @@ vim.o.cursorline = true
 -- Set splitbelow and splitright
 vim.o.splitbelow = true
 vim.o.splitright = true
-
--- let g:netrw_banner=0        " disable banner
--- let g:netrw_altv=1          " open splits to the right
--- let g:netrw_list_hide=',\(^\|\s\s\)\zs\.\S\+'
-vim.g.netrw_banner = 0
-vim.g.netrw_altv = 1
-vim.g.netrw_list_hide = ',\\(^\\|\\s\\s\\)\\zs\\.\\S\\+'
 
 -- Fuzzy find
 vim.o.path = vim.o.path .. '**'
