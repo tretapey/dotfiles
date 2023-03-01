@@ -517,11 +517,6 @@ vim.api.nvim_set_keymap('n', '<leader>f', 'mF:%!eslint_d --stdin --fix-to-stdout
 -- Keymap to run prettier on the current file
 vim.api.nvim_set_keymap('n', '<leader>p', 'mF:%!prettier --stdin-filepath %<CR>`F', { noremap = true, silent = true })
 
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.softtabstop = 2
-vim.o.shiftround = true
-vim.o.expandtab = true
 vim.o.foldmethod = 'indent'
 vim.o.foldnestmax = 1
 vim.o.foldlevelstart = 1
