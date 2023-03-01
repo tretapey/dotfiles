@@ -517,7 +517,6 @@ vim.api.nvim_set_keymap('n', '<leader>f', 'mF:%!eslint_d --stdin --fix-to-stdout
 -- Keymap to run prettier on the current file
 vim.api.nvim_set_keymap('n', '<leader>p', 'mF:%!prettier --stdin-filepath %<CR>`F', { noremap = true, silent = true })
 
-vim.o.autoindent = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.softtabstop = 2
@@ -542,7 +541,6 @@ vim.g.netrw_list_hide = ',\\(^\\|\\s\\s\\)\\zs\\.\\S\\+'
 
 -- Fuzzy find
 vim.o.path = vim.o.path .. '**'
-vim.o.wildmenu = true
 vim.o.wildmode = 'list:longest,full'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
