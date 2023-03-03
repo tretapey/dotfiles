@@ -506,7 +506,7 @@ cmp.setup {
 -- Custom keymaps
 vim.keymap.set('n', '<Leader>w', '<C-w>', { silent = true })
 vim.keymap.set('n', '<Esc><Esc>', ':w<CR>', { silent = true })
-vim.keymap.set('n', '<Leader>e', ':Neotree<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>e', ':Neotree toggle<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>er', ':Neotree reveal<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>E', ':Explore<CR>', { silent = true })
 
