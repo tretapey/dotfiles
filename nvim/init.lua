@@ -363,7 +363,7 @@ require('nvim-treesitter.configs').setup {
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-vim.keymap.set('n', '<leader>E', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
 -- LSP settings.
@@ -503,19 +503,19 @@ cmp.setup {
   },
 }
 
-vim.g.copilot_assume_mapped = true
-
 -- Custom keymaps
 vim.keymap.set('n', '<Leader>w', '<C-w>', { silent = true })
 vim.keymap.set('n', '<Esc><Esc>', ':w<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>e', ':Neotree<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>er', ':Neotree reveal<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>E', ':Explore<CR>', { silent = true })
 
 -- Keymap to run eslint on the current file
 vim.api.nvim_set_keymap('n', '<leader>f', 'mF:%!eslint_d --stdin --fix-to-stdout<CR>`F',
   { noremap = true, silent = true })
 
 -- Keymap to run prettier on the current file
-vim.api.nvim_set_keymap('n', '<leader>p', 'mF:%!prettier --stdin-filepath %<CR>`F', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>P', 'mF:%!prettier --stdin-filepath %<CR>`F', { noremap = true, silent = true })
 
 vim.o.foldmethod = 'indent'
 vim.o.foldnestmax = 1
@@ -530,5 +530,9 @@ vim.o.splitright = true
 -- Fuzzy find
 vim.o.path = vim.o.path .. '**'
 vim.o.wildmode = 'list:longest,full'
+
+-- Copilot configuration
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
