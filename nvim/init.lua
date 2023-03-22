@@ -66,8 +66,6 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
   'github/copilot.vim',
 
-  'mhartington/formatter.nvim',
-  'mfussenegger/nvim-dap',
   'mfussenegger/nvim-lint',
   'tpope/vim-surround',
 
@@ -189,8 +187,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
-  require 'kickstart.plugins.debug',
+  -- require 'kickstart.plugins.autoformat',
+  -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -522,6 +520,9 @@ vim.keymap.set('n', '<Leader>E', ':Explore<CR>', { silent = true })
 -- Keymap to run eslint on the current file
 vim.api.nvim_set_keymap('n', '<leader>f', 'mF:%!eslint_d --stdin --fix-to-stdout<CR>`F',
   { noremap = true, silent = true })
+
+-- Keymap to run :Format
+vim.api.nvim_set_keymap('n', '<leader>F', ':Format<CR>', { noremap = true, silent = true })
 
 -- Keymap to run prettier on the current file
 vim.api.nvim_set_keymap('n', '<leader>P', 'mF:%!prettier --stdin-filepath %<CR>`F', { noremap = true, silent = true })
