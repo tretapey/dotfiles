@@ -5,7 +5,7 @@
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 return {
-  'wellle/context.vim',
+  'nvim-treesitter/nvim-treesitter-context',
   {
     "windwp/nvim-autopairs",
     config = function()
