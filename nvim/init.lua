@@ -140,6 +140,7 @@ require('lazy').setup({
   },
 
   'nvim-lualine/lualine.nvim',
+  'nvim-tree/nvim-web-devicons',
 
   {
     -- Add indentation guides even on blank lines
@@ -550,7 +551,7 @@ vim.g.blamer_enabled = 1
 require('lualine').setup {
   options = {
     theme = 'auto',
-    icons_enabled = false,
+    icons_enabled = true,
     component_separators = '|',
     section_separators = '',
   }
