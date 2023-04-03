@@ -119,29 +119,27 @@ require('lazy').setup({
     },
   },
 
+  -- {
+  --   -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     -- If this don't work use 'default' instead of 'onedark'
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
+  --
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
+    'projekt0n/github-nvim-theme',
+    tag = 'v0.0.7',
     config = function()
-      -- If this don't work use 'default' instead of 'onedark'
-      vim.cmd.colorscheme 'onedark'
-    end,
+      require('github-theme').setup({
+        theme_style = "dark_default",
+      })
+    end
   },
 
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
+  'nvim-lualine/lualine.nvim',
 
   {
     -- Add indentation guides even on blank lines
@@ -548,3 +546,12 @@ vim.api.nvim_set_keymap("i", "<Right>", 'copilot#Accept("<CR>")', { silent = tru
 vim.g.blamer_enabled = 1
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+--
+require('lualine').setup {
+  options = {
+    theme = 'auto',
+    icons_enabled = false,
+    component_separators = '|',
+    section_separators = '',
+  }
+}
