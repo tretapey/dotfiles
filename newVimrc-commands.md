@@ -98,7 +98,7 @@ Funciona en modo normal y visual. Detecta automáticamente:
 
 | Comando | Descripción |
 |---------|-------------|
-| `` <Leader>` `` | Toggle terminal persistente (abre/cierra) |
+| `` <Leader>` `` | Abrir terminal en la parte inferior (acceso rápido) |
 | `<Leader>tt` | Abrir terminal |
 | `<Leader>tv` | Abrir terminal en split vertical |
 | `<Leader>ts` | Abrir terminal en split horizontal |
@@ -295,7 +295,7 @@ La barra de estado muestra:
 
 1. **Explorador de archivos**: Usa `<Leader>e` para toggle rápido del sidebar
 2. **Búsqueda rápida**: Usa `<Leader>o` para encontrar cualquier archivo rápidamente
-3. **Terminal persistente**: `` <Leader>` `` abre/cierra el mismo terminal (no pierde historial)
+3. **Terminal rápido**: `` <Leader>` `` abre terminal en la parte inferior para acceso rápido
 4. **Git branch visible**: Mira la statusline para ver en qué branch estás
 5. **Comentarios inteligentes**: `<Leader>/` detecta el tipo de archivo automáticamente
 6. **Undo infinito**: Puedes deshacer cambios incluso después de cerrar y reabrir vim

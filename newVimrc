@@ -340,31 +340,8 @@ if has('nvim')
     nnoremap <Leader>ts :split<CR>:terminal<CR>
 endif
 
-" Quick terminal toggle (persistent terminal)
-let g:term_buf = 0
-function! ToggleTerminal()
-  if g:term_buf == 0 || !bufexists(g:term_buf)
-    " Create terminal in one command to avoid empty split
-    execute 'botright terminal'
-    resize 15
-    let g:term_buf = bufnr('%')
-  else
-    let l:term_win = bufwinnr(g:term_buf)
-    if l:term_win == -1
-      " Re-open existing terminal buffer
-      execute 'botright split'
-      resize 15
-      execute 'buffer ' . g:term_buf
-    else
-      " Close if already open
-      execute l:term_win . 'wincmd w'
-      close
-    endif
-  endif
-endfunction
-
-" Toggle terminal with backtick (like many IDEs)
-nnoremap <Leader>` :call ToggleTerminal()<CR>
+" Quick terminal at bottom (like many IDEs)
+nnoremap <Leader>` :botright terminal<CR>:resize 15<CR>
 
 " ============================================================================
 " Split Window Management
@@ -746,7 +723,7 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 "   <Leader>tt                 - Open terminal
 "   <Leader>tv                 - Open terminal in vertical split
 "   <Leader>ts                 - Open terminal in horizontal split
-"   <Leader>`                  - Toggle persistent terminal (like IDE)
+"   <Leader>`                  - Open terminal at bottom (quick access)
 "   :FormatJSON                - Format JSON in current buffer
 "
 " Git Integration:
