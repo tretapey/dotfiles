@@ -11,7 +11,6 @@ let mapleader="\<Space>"
 
 " Display
 set number              " Show line numbers
-set relativenumber      " Relative line numbers for easier navigation
 set mouse=a             " Enable mouse support
 set title               " Set terminal title
 set nowrap              " Don't wrap lines
@@ -31,18 +30,6 @@ set showcmd             " Show command in bottom bar
 " Enable syntax highlighting
 syntax enable
 syntax on
-
-" Use true colors if available
-if has('termguicolors')
-  set termguicolors
-endif
-
-" Better colors for common themes
-try
-  colorscheme desert
-catch
-  colorscheme default
-endtry
 
 " Indentation
 set tabstop=2           " Tab width
@@ -228,14 +215,19 @@ map <Leader>w <C-w>
 let g:netrw_banner=0        " Disable banner
 let g:netrw_altv=1          " Open splits to the right
 let g:netrw_liststyle=3     " Tree view
+let g:netrw_winsize=25      " Width of explorer (25%)
 let g:netrw_list_hide=',\(^\|\s\s\)\zs\.\S\+'
-map <Leader>e :Explore<CR>
+map <Leader>e :Lexplore<CR>
 
 " Tab management
 map <Leader>t :tabedit<Space>
 
-" Fuzzy find
+" Fuzzy find - searches recursively in all subdirectories
 map <Leader>f :find<Space>
+
+" Quick file finder (like Ctrl+p in VSCode)
+" Lists all files in current directory and subdirectories
+nnoremap <Leader>p :find **/*
 
 " Buffer management
 nnoremap <Leader>b :buffer<Space>
@@ -269,7 +261,7 @@ nnoremap <Leader>cc :cclose<CR>
 nnoremap <Leader>j J
 
 " Toggle line numbers
-nnoremap <Leader>ln :set number! relativenumber!<CR>
+nnoremap <Leader>ln :set number!<CR>
 
 " Toggle wrap
 nnoremap <Leader>lw :set wrap!<CR>
@@ -316,13 +308,6 @@ endfunction
 " Comment toggle mapping (optional - you can use <Leader>/ if you want)
 nnoremap <Leader>/ :call ToggleComment()<CR>
 vnoremap <Leader>/ :call ToggleComment()<CR>
-
-" ============================================================================
-" File Explorer Enhancement
-" ============================================================================
-
-" Toggle file explorer (keeps your <Leader>e command)
-let g:netrw_winsize=25              " Width of explorer
 
 " ============================================================================
 " Terminal Mappings
@@ -743,11 +728,14 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 " Visual Enhancements:
 "   - Enhanced statusline with mode, file info, git branch
 "   - Custom tabline showing modified buffers
-"   - Relative line numbers for easier navigation
 "   - Persistent undo across sessions
 "   - Organized backup and swap directories
+"   - Uses terminal colors (no custom colorscheme)
 "
 " New Features Added:
+"   <Leader>e                  - Toggle file explorer sidebar (Lexplore)
+"   <Leader>f                  - Find file (with autocomplete)
+"   <Leader>p                  - Quick file finder (like Ctrl+p - searches all files)
 "   <Leader>/                  - Toggle comment (auto-detects file type)
 "   <Leader>ln                 - Toggle line numbers
 "   <Leader>lw                 - Toggle line wrap
