@@ -310,25 +310,23 @@ command! ClaudeContext call ClaudeWithFile()
 " ============================================================================
 " Claude Code Mappings
 " ============================================================================
+" Note: Using <Leader>ai prefix to avoid conflicts with other plugins
+" (ai = Artificial Intelligence)
 
 " Open Claude Code interactively
-nnoremap <Leader>cc :Claude<CR>
-
-" Send current file to Claude
-nnoremap <Leader>cf :ClaudeFile
+nnoremap <Leader>ai :Claude<CR>
 
 " Send current file with context (interactive Claude)
-nnoremap <Leader>cx :ClaudeContext<CR>
-
-" Quick Claude prompt
-nnoremap <Leader>cp :ClaudePrompt
+nnoremap <Leader>ac :ClaudeContext<CR>
 
 " Edit selection with Claude (visual mode)
-vnoremap <Leader>ce :ClaudeEdit
-vnoremap <Leader>cs :ClaudeSelection
+vnoremap <Leader>ae :ClaudeEdit
 
 " Apply last Claude response
-nnoremap <Leader>ca :ClaudeApply<CR>
+nnoremap <Leader>aa :ClaudeApply<CR>
+
+" Alternative: You can also just use the commands directly:
+" :Claude, :ClaudeContext, :ClaudeFile, :ClaudeSelection, :ClaudePrompt, :ClaudeEdit, :ClaudeApply
 
 " ============================================================================
 " Help for Claude Code commands
@@ -344,36 +342,37 @@ nnoremap <Leader>ca :ClaudeApply<CR>
 "   :ClaudeApply                  - Apply the last Claude response
 "
 " Mappings:
-"   <Leader>cc                    - Open Claude Code interactively
-"   <Leader>cf                    - Send current file to Claude
-"   <Leader>cx                    - Open Claude with file context
-"   <Leader>cp                    - Quick Claude prompt
-"   (visual) <Leader>ce           - Edit selection with Claude
-"   (visual) <Leader>cs           - Send selection to Claude
-"   <Leader>ca                    - Apply last Claude response
+"   <Leader>ai                    - Open Claude Code interactively
+"   <Leader>ac                    - Open Claude with file context
+"   (visual) <Leader>ae           - Edit selection with Claude
+"   <Leader>aa                    - Apply last Claude response
+"
+" Note: Most commands are better used directly via :Command syntax
 "
 " Workflow Examples:
 "
 "   1. Interactive Claude:
-"      <Leader>cc                 - Opens Claude Code in terminal
+"      :Claude                    - Opens Claude Code in terminal
+"      <Leader>ai                 - Same as above (shortcut)
 "
 "   2. Ask about current file:
-"      <Leader>cf explain this code
 "      :ClaudeFile what does this file do?
+"      :ClaudeFile explain this code
 "
 "   3. Work with Claude interactively with file context:
-"      <Leader>cx                 - Opens Claude with file loaded
+"      :ClaudeContext             - Opens Claude with file loaded
+"      <Leader>ac                 - Same as above (shortcut)
 "
 "   4. Edit selection:
-"      (select code) <Leader>ce add comments
-"      (select code) :ClaudeEdit refactor this function
-"      Then review and :ClaudeApply to accept changes
+"      (select code) :ClaudeEdit add comments
+"      (select code) <Leader>ae add comments
+"      Then review and :ClaudeApply (or <Leader>aa) to accept changes
 "
 "   5. Quick question:
-"      <Leader>cp explain async/await in JavaScript
+"      :ClaudePrompt explain async/await in JavaScript
 "
 "   6. Send selection to Claude:
-"      (select code) <Leader>cs explain this
+"      (select code) :ClaudeSelection explain this
 "
 " Note: Leader key is <Space> by default
 "
