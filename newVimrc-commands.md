@@ -288,6 +288,26 @@ La barra de estado muestra:
 - ✅ **Tree view** - Explorador de archivos en vista de árbol
 - ✅ **Statusline mejorada** - Con información de Git y archivo
 - ✅ **Tabline personalizada** - Muestra buffers modificados con [+]
+- ✅ **Filetype detection** - Reconoce múltiples lenguajes automáticamente
+
+## 🎨 Lenguajes Soportados
+
+Detección automática de filetype para:
+
+| Extensión | Filetype | Syntax Highlighting |
+|-----------|----------|---------------------|
+| `.svelte` | HTML | HTML (base) |
+| `.vue` | HTML | HTML (base) |
+| `.tsx` | TypeScript React | TypeScript |
+| `.jsx` | JavaScript React | JavaScript |
+| `.md`, `.markdown` | Markdown | Markdown |
+| `.yml`, `.yaml` | YAML | YAML |
+| `.json` | JSON | JSON |
+| `Dockerfile*` | Dockerfile | Dockerfile |
+| `.tf`, `.tfvars` | Terraform | Terraform |
+| `.gotmpl`, `.tmpl` | Go Template | Go Template |
+
+> **Nota:** Para syntax highlighting avanzado de Svelte/Vue, considera instalar plugins como [vim-svelte](https://github.com/evanleck/vim-svelte-plugin) o usar un plugin manager. Este vimrc usa HTML como fallback para tener al menos highlighting básico.
 
 ---
 

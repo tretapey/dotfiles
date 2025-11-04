@@ -31,6 +31,48 @@ set showcmd             " Show command in bottom bar
 syntax enable
 syntax on
 
+" ============================================================================
+" Filetype Detection for Additional Languages
+" ============================================================================
+
+" Enable filetype detection
+filetype on
+filetype plugin indent on
+
+" Custom filetype associations
+augroup filetypedetect
+  autocmd!
+  " Svelte files (uses HTML syntax as base)
+  autocmd BufNewFile,BufRead *.svelte set filetype=html syntax=html
+
+  " TypeScript React
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
+
+  " JSX
+  autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
+
+  " Vue files
+  autocmd BufNewFile,BufRead *.vue set filetype=html syntax=html
+
+  " Markdown variants
+  autocmd BufNewFile,BufRead *.md,*.markdown set filetype=markdown
+
+  " YAML
+  autocmd BufNewFile,BufRead *.yml,*.yaml set filetype=yaml
+
+  " JSON
+  autocmd BufNewFile,BufRead *.json set filetype=json
+
+  " Docker
+  autocmd BufNewFile,BufRead Dockerfile*,*.dockerfile set filetype=dockerfile
+
+  " Terraform
+  autocmd BufNewFile,BufRead *.tf,*.tfvars set filetype=terraform
+
+  " Go templates
+  autocmd BufNewFile,BufRead *.gotmpl,*.tmpl set filetype=gotmpl
+augroup END
+
 " Indentation
 set tabstop=2           " Tab width
 set shiftwidth=2        " Indent width
@@ -706,6 +748,7 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 "   - Persistent undo across sessions
 "   - Organized backup and swap directories
 "   - Uses terminal colors (no custom colorscheme)
+"   - Filetype detection for .svelte, .vue, .tsx, .jsx, and more
 "
 " New Features Added:
 "   <Leader>e                  - Toggle file explorer sidebar (Lexplore)
