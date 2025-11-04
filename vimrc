@@ -331,6 +331,178 @@ function! ClaudeWithFile()
 endfunction
 
 " ============================================================================
+" Git Diff Integration Functions
+" ============================================================================
+
+" Function to show git diff of current file in split view
+function! GitDiffFile()
+    let l:file = expand('%:p')
+
+    " Check if file exists and is in a git repo
+    if empty(l:file)
+        echo "No file in current buffer"
+        return
+    endif
+
+    " Check if file is tracked by git
+    let l:git_check = system('git ls-files --error-unmatch ' . shellescape(l:file) . ' 2>/dev/null')
+    if v:shell_error != 0
+        echo "File is not tracked by git"
+        return
+    endif
+
+    " Get the relative path from git root
+    let l:git_path = system('git ls-files --full-name ' . shellescape(l:file))
+    let l:git_path = substitute(l:git_path, '\n', '', 'g')
+
+    " Check if file has changes
+    let l:diff_check = system('git diff HEAD -- ' . shellescape(l:file))
+    if empty(l:diff_check)
+        echo "No changes in current file"
+        return
+    endif
+
+    " Save current window
+    let l:current_win = winnr()
+
+    " Get the HEAD version of the file
+    let l:head_content = system('git show HEAD:' . l:git_path)
+
+    if v:shell_error != 0
+        echo "Error getting HEAD version: " . l:head_content
+        return
+    endif
+
+    " Create a new vertical split on the left
+    leftabove vnew
+
+    " Set up the buffer with HEAD content
+    setlocal buftype=nofile
+    setlocal bufhidden=wipe
+    setlocal noswapfile
+    setlocal readonly
+    setlocal nomodifiable
+
+    " Set the buffer name
+    silent file [HEAD]\ %:t
+
+    " Insert HEAD content
+    setlocal modifiable
+    call setline(1, split(l:head_content, '\n'))
+    setlocal nomodifiable
+
+    " Enable diff mode on this buffer
+    diffthis
+
+    " Go back to the original window and enable diff
+    wincmd l
+    diffthis
+
+    echo "Showing git diff. Use :GitDiffClose or <Leader>gq to close"
+endfunction
+
+" Function to close git diff view
+function! GitDiffClose()
+    " Turn off diff mode in all windows
+    diffoff!
+
+    " Close any [HEAD] buffers
+    let l:buffers = range(1, bufnr('$'))
+    for l:buf in l:buffers
+        if bufexists(l:buf) && bufname(l:buf) =~ '^\[HEAD\]'
+            execute 'bwipeout! ' . l:buf
+        endif
+    endfor
+
+    echo "Git diff closed"
+endfunction
+
+" Function to show git status in a split
+function! GitStatus()
+    " Get git status
+    let l:status = system('git status')
+
+    if v:shell_error != 0
+        echo "Not in a git repository"
+        return
+    endif
+
+    " Create a new split at the bottom
+    botright new
+    resize 15
+
+    " Set buffer options
+    setlocal buftype=nofile
+    setlocal bufhidden=wipe
+    setlocal noswapfile
+    setlocal nomodifiable
+
+    " Set buffer name
+    silent file [Git\ Status]
+
+    " Insert content
+    setlocal modifiable
+    call setline(1, split(l:status, '\n'))
+    setlocal nomodifiable
+
+    " Add syntax highlighting
+    syntax match gitStatusModified "^\s*modified:.*"
+    syntax match gitStatusNew "^\s*new file:.*"
+    syntax match gitStatusDeleted "^\s*deleted:.*"
+    syntax match gitStatusRenamed "^\s*renamed:.*"
+    syntax match gitStatusUntracked "^\s*.*Untracked files.*"
+
+    highlight gitStatusModified ctermfg=yellow guifg=yellow
+    highlight gitStatusNew ctermfg=green guifg=green
+    highlight gitStatusDeleted ctermfg=red guifg=red
+    highlight gitStatusRenamed ctermfg=blue guifg=blue
+    highlight gitStatusUntracked ctermfg=red guifg=red
+
+    echo "Press q to close"
+    nnoremap <buffer> q :q<CR>
+endfunction
+
+" Function to show git diff of all changes
+function! GitDiffAll()
+    " Get git diff
+    let l:diff = system('git diff HEAD')
+
+    if v:shell_error != 0
+        echo "Error getting git diff"
+        return
+    endif
+
+    if empty(l:diff)
+        echo "No changes in repository"
+        return
+    endif
+
+    " Create a new split at the bottom
+    botright new
+    resize 20
+
+    " Set buffer options
+    setlocal buftype=nofile
+    setlocal bufhidden=wipe
+    setlocal noswapfile
+    setlocal nomodifiable
+
+    " Set buffer name
+    silent file [Git\ Diff\ All]
+
+    " Insert content
+    setlocal modifiable
+    call setline(1, split(l:diff, '\n'))
+    setlocal nomodifiable
+
+    " Set filetype to diff for syntax highlighting
+    setlocal filetype=diff
+
+    echo "Press q to close"
+    nnoremap <buffer> q :q<CR>
+endfunction
+
+" ============================================================================
 " Claude Code Commands
 " ============================================================================
 
@@ -356,6 +528,38 @@ command! ClaudeApply call ClaudeApply()
 command! ClaudeContext call ClaudeWithFile()
 
 " ============================================================================
+" Git Commands
+" ============================================================================
+
+" Show git diff of current file in split view
+command! GitDiff call GitDiffFile()
+
+" Close git diff view
+command! GitDiffClose call GitDiffClose()
+
+" Show git status
+command! GitStatus call GitStatus()
+
+" Show all git changes
+command! GitDiffAll call GitDiffAll()
+
+" ============================================================================
+" Git Mappings
+" ============================================================================
+
+" Show git diff of current file (split view like VSCode)
+nnoremap <Leader>gd :GitDiff<CR>
+
+" Close git diff view
+nnoremap <Leader>gq :GitDiffClose<CR>
+
+" Show git status
+nnoremap <Leader>gs :GitStatus<CR>
+
+" Show all git changes
+nnoremap <Leader>ga :GitDiffAll<CR>
+
+" ============================================================================
 " Claude Code Mappings
 " ============================================================================
 " Note: Using <Leader>ai prefix to avoid conflicts with other plugins
@@ -376,6 +580,40 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 " Alternative: You can also just use the commands directly:
 " :Claude, :ClaudeContext, :ClaudeFile, :ClaudeSelection, :ClaudePrompt, :ClaudeEdit, :ClaudeApply
 
+" ============================================================================
+" Help - Git Integration
+" ============================================================================
+"
+" Commands:
+"   :GitDiff                      - Show git diff of current file in split view
+"   :GitDiffClose                 - Close git diff view
+"   :GitStatus                    - Show git status in split
+"   :GitDiffAll                   - Show all git changes in repository
+"
+" Mappings:
+"   <Leader>gd                    - Show git diff (split view like VSCode)
+"   <Leader>gq                    - Close git diff view
+"   <Leader>gs                    - Show git status
+"   <Leader>ga                    - Show all git changes
+"
+" Git Diff Navigation (when in diff mode):
+"   ]c                            - Jump to next change
+"   [c                            - Jump to previous change
+"   do                            - Obtain change from other buffer
+"   dp                            - Put change to other buffer
+"   :diffupdate                   - Update diff highlighting
+"   zo                            - Open fold
+"   zc                            - Close fold
+"
+" Workflow Example:
+"   1. Edit a file that's tracked by git
+"   2. Press <Leader>gd to see changes side-by-side
+"      - Left side: HEAD version (read-only)
+"      - Right side: Your changes (editable)
+"   3. Navigate between changes with ]c and [c
+"   4. Press <Leader>gq to close diff view
+"   5. Use <Leader>gs to see git status anytime
+"
 " ============================================================================
 " Help - Terminal and Split Management
 " ============================================================================
