@@ -225,9 +225,9 @@ map <Leader>t :tabedit<Space>
 " Fuzzy find - searches recursively in all subdirectories
 map <Leader>f :find<Space>
 
-" Quick file finder (like Ctrl+p in VSCode)
+" Quick file opener (like Ctrl+p in VSCode)
 " Lists all files in current directory and subdirectories
-nnoremap <Leader>p :find **/*
+nnoremap <Leader>o :find **/*
 
 " Buffer management
 nnoremap <Leader>b :buffer<Space>
@@ -734,8 +734,8 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 "
 " New Features Added:
 "   <Leader>e                  - Toggle file explorer sidebar (Lexplore)
-"   <Leader>f                  - Find file (with autocomplete)
-"   <Leader>p                  - Quick file finder (like Ctrl+p - searches all files)
+"   <Leader>f                  - Find file by name (with autocomplete)
+"   <Leader>o                  - Open any file (lists all files like Ctrl+p)
 "   <Leader>/                  - Toggle comment (auto-detects file type)
 "   <Leader>ln                 - Toggle line numbers
 "   <Leader>lw                 - Toggle line wrap
