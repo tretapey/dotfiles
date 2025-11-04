@@ -84,6 +84,54 @@ map <Leader>F :grep -R<Space>
 nnoremap <Leader><Space> :nohlsearch<CR>
 
 " ============================================================================
+" Terminal Mappings
+" ============================================================================
+
+" Terminal mode mappings for vim
+if has('terminal')
+    " Exit terminal mode with Esc (easier than Ctrl-W N)
+    tnoremap <Esc><Esc> <C-W>N
+    " Quick window navigation from terminal mode
+    tnoremap <C-w> <C-W>
+endif
+
+" Terminal mode mappings for neovim
+if has('nvim')
+    " Exit terminal mode with Esc
+    tnoremap <Esc><Esc> <C-\><C-n>
+    " Quick window navigation from terminal mode
+    tnoremap <C-w>h <C-\><C-n><C-w>h
+    tnoremap <C-w>j <C-\><C-n><C-w>j
+    tnoremap <C-w>k <C-\><C-n><C-w>k
+    tnoremap <C-w>l <C-\><C-n><C-w>l
+endif
+
+" ============================================================================
+" Split Window Management
+" ============================================================================
+
+" Function to toggle window zoom (maximize/restore)
+function! ToggleZoom()
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+
+" Zoom toggle mapping
+nnoremap <Leader>z :call ToggleZoom()<CR>
+
+" Quick split resizing
+nnoremap <Leader>= <C-w>=
+nnoremap <Leader>_ <C-w>_
+nnoremap <Leader>\| <C-w>\|
+
+" ============================================================================
 " Claude Code Integration Functions
 " ============================================================================
 
@@ -329,7 +377,29 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 " :Claude, :ClaudeContext, :ClaudeFile, :ClaudeSelection, :ClaudePrompt, :ClaudeEdit, :ClaudeApply
 
 " ============================================================================
-" Help for Claude Code commands
+" Help - Terminal and Split Management
+" ============================================================================
+"
+" Terminal Scrolling:
+"   When in Claude terminal, press Esc Esc to enter Normal mode
+"   Then you can:
+"     - Use j/k or arrow keys to scroll
+"     - Use Ctrl-u/Ctrl-d for page up/down
+"     - Use gg/G to go to top/bottom
+"     - Use / to search
+"   Press i or a to return to terminal mode
+"
+" Split Management:
+"   <Leader>z                     - Toggle zoom (maximize/restore current split)
+"   <Leader>=                     - Equalize all splits
+"   <Leader>_                     - Maximize current split vertically
+"   <Leader>|                     - Maximize current split horizontally
+"   Ctrl-w h/j/k/l                - Navigate between splits
+"   Ctrl-w +/-                    - Resize split height
+"   Ctrl-w >/<                    - Resize split width
+"
+" ============================================================================
+" Help - Claude Code Commands
 " ============================================================================
 "
 " Commands:
