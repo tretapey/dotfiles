@@ -152,10 +152,7 @@ endif
 " Remember cursor position
 augroup remember_cursor
   autocmd!
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   execute "normal! g`\"" |
-    \ endif
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
 augroup END
 
 " ============================================================================
@@ -408,7 +405,7 @@ nnoremap <Leader>z :call ToggleZoom()<CR>
 " Quick split resizing
 nnoremap <Leader>= <C-w>=
 nnoremap <Leader>_ <C-w>_
-nnoremap <Leader>\| <C-w>\|
+nnoremap <Leader><Bar> <C-w><Bar>
 
 " ============================================================================
 " Git Integration Commands
