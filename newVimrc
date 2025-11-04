@@ -344,21 +344,19 @@ endif
 let g:term_buf = 0
 function! ToggleTerminal()
   if g:term_buf == 0 || !bufexists(g:term_buf)
-    botright new
+    " Create terminal in one command to avoid empty split
+    execute 'botright terminal'
     resize 15
-    if has('nvim')
-      terminal
-    else
-      terminal
-    endif
     let g:term_buf = bufnr('%')
   else
     let l:term_win = bufwinnr(g:term_buf)
     if l:term_win == -1
-      botright new
+      " Re-open existing terminal buffer
+      execute 'botright split'
       resize 15
       execute 'buffer ' . g:term_buf
     else
+      " Close if already open
       execute l:term_win . 'wincmd w'
       close
     endif
