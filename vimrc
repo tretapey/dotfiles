@@ -1,5 +1,5 @@
 " ============================================================================
-" VIM Configuration with Claude Integration
+" VIM Configuration with Claude Code Integration
 " ============================================================================
 
 " Leader key
@@ -84,228 +84,297 @@ map <Leader>F :grep -R<Space>
 nnoremap <Leader><Space> :nohlsearch<CR>
 
 " ============================================================================
-" Claude Integration Functions
+" Claude Code Integration Functions
 " ============================================================================
 
-" Function to execute Claude command and show output in a split
-function! ClaudeExecute(prompt)
-    " Create a temporary file for the output
-    let l:temp_file = tempname()
-
-    " Execute Claude command
-    let l:cmd = 'claude ' . shellescape(a:prompt) . ' > ' . l:temp_file . ' 2>&1'
-    call system(l:cmd)
-
-    " Open result in a new split
-    execute 'botright new'
-    execute 'resize 15'
-    execute 'read ' . l:temp_file
-
-    " Set buffer options
-    setlocal buftype=nofile
-    setlocal bufhidden=wipe
-    setlocal noswapfile
-    setlocal readonly
-    setlocal nomodifiable
-
-    " Delete first empty line
-    normal! ggdd
-
-    " Clean up temp file
-    call delete(l:temp_file)
+" Function to open Claude Code interactively in terminal
+function! ClaudeOpen()
+    " Check if we have terminal support
+    if has('terminal')
+        " Open Claude in a terminal split
+        botright terminal ++close ++rows=20 claude
+    elseif has('nvim')
+        " Neovim terminal
+        botright split
+        resize 20
+        terminal claude
+    else
+        " Fallback to shell execution
+        !claude
+    endif
 endfunction
 
-" Function to send selected text to Claude for editing
-function! ClaudeEdit(instructions) range
+" Function to send current file to Claude Code
+function! ClaudeFile(...)
+    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Review this file'
+    let l:file = expand('%:p')
+
+    if empty(l:file)
+        echo "No file in current buffer"
+        return
+    endif
+
+    " Create command to run claude with file context
+    let l:cmd = 'claude "' . escape(l:prompt, '"') . '" "' . l:file . '"'
+
+    " Check if we have terminal support
+    if has('terminal')
+        execute 'botright terminal ++close ++rows=20 ' . l:cmd
+    elseif has('nvim')
+        botright split
+        resize 20
+        execute 'terminal ' . l:cmd
+    else
+        execute '!' . l:cmd
+    endif
+endfunction
+
+" Function to send selected text to Claude Code
+function! ClaudeSelection(...) range
+    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Explain this code'
+
     " Get the selected text
     let l:lines = getline(a:firstline, a:lastline)
     let l:text = join(l:lines, "\n")
 
-    " Create temporary files
-    let l:input_file = tempname()
-    let l:output_file = tempname()
+    " Create temporary file with selection
+    let l:temp_file = tempname() . '.txt'
+    call writefile(l:lines, l:temp_file)
 
-    " Write selected text to temp file
+    " Create command to run claude with selection
+    let l:cmd = 'claude "' . escape(l:prompt, '"') . '" "' . l:temp_file . '"'
+
+    " Check if we have terminal support
+    if has('terminal')
+        execute 'botright terminal ++close ++rows=20 ' . l:cmd
+    elseif has('nvim')
+        botright split
+        resize 20
+        execute 'terminal ' . l:cmd
+    else
+        execute '!' . l:cmd
+    endif
+endfunction
+
+" Function to run Claude Code with a specific prompt
+function! ClaudePrompt(prompt)
+    let l:cmd = 'claude "' . escape(a:prompt, '"') . '"'
+
+    " Check if we have terminal support
+    if has('terminal')
+        execute 'botright terminal ++close ++rows=20 ' . l:cmd
+    elseif has('nvim')
+        botright split
+        resize 20
+        execute 'terminal ' . l:cmd
+    else
+        execute '!' . l:cmd
+    endif
+endfunction
+
+" Function to send current file to Claude and get code back
+function! ClaudeEdit(...) range
+    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Refactor this code'
+
+    " Get the text (either selection or whole file)
+    if a:firstline != a:lastline || a:firstline != 1
+        " We have a selection
+        let l:lines = getline(a:firstline, a:lastline)
+        let l:is_selection = 1
+    else
+        " Whole file
+        let l:lines = getline(1, '$')
+        let l:is_selection = 0
+    endif
+
+    " Create temporary input file
+    let l:input_file = tempname() . '.txt'
     call writefile(l:lines, l:input_file)
 
-    " Build the prompt
-    let l:prompt = a:instructions . "\n\nText to edit:\n" . l:text
+    " Create temporary output file
+    let l:output_file = tempname() . '.txt'
 
-    " Execute Claude command
-    let l:cmd = 'echo ' . shellescape(l:prompt) . ' | claude > ' . l:output_file . ' 2>&1'
+    " Run claude in non-interactive mode
+    let l:full_prompt = l:prompt . '. Respond with ONLY the code, no explanations.'
+    let l:cmd = 'claude "' . escape(l:full_prompt, '"') . '" "' . l:input_file . '" > "' . l:output_file . '" 2>&1'
+
+    echo "Asking Claude Code..."
     call system(l:cmd)
 
-    " Read the response
-    let l:response = readfile(l:output_file)
+    " Check if output file exists and has content
+    if filereadable(l:output_file)
+        let l:response = readfile(l:output_file)
 
-    " Show response in a new split
-    execute 'botright new'
-    execute 'resize 15'
-    call setline(1, l:response)
+        " Show response in a new split for review
+        botright new
+        resize 15
+        call setline(1, l:response)
+        setlocal buftype=nofile
+        setlocal bufhidden=wipe
+        setlocal noswapfile
 
-    " Set buffer options
-    setlocal buftype=nofile
-    setlocal bufhidden=wipe
-    setlocal noswapfile
+        echo "Review the changes. Use :ClaudeApply to apply them."
+
+        " Store the range and response for later use
+        let g:claude_last_response = l:response
+        let g:claude_last_range = [a:firstline, a:lastline]
+        let g:claude_last_is_selection = l:is_selection
+    else
+        echo "Error: No response from Claude Code"
+    endif
 
     " Clean up temp files
     call delete(l:input_file)
-    call delete(l:output_file)
 endfunction
 
-" Function to ask Claude about selected text
-function! ClaudeAsk(question) range
-    " Get the selected text
-    let l:lines = getline(a:firstline, a:lastline)
-    let l:text = join(l:lines, "\n")
+" Function to apply the last Claude response
+function! ClaudeApply()
+    if !exists('g:claude_last_response')
+        echo "No Claude response to apply"
+        return
+    endif
 
-    " Create temporary file
-    let l:output_file = tempname()
+    " Close the preview window
+    execute 'pclose'
 
-    " Build the prompt
-    let l:prompt = a:question . "\n\nContext:\n" . l:text
+    " Go back to the original window
+    wincmd p
 
-    " Execute Claude command
-    let l:cmd = 'echo ' . shellescape(l:prompt) . ' | claude > ' . l:output_file . ' 2>&1'
-    call system(l:cmd)
+    " Apply the changes
+    if g:claude_last_is_selection
+        " Replace selection
+        execute g:claude_last_range[0] . ',' . g:claude_last_range[1] . 'delete'
+        call append(g:claude_last_range[0] - 1, g:claude_last_response)
+    else
+        " Replace whole file
+        %delete
+        call setline(1, g:claude_last_response)
+    endif
 
-    " Read the response
-    let l:response = readfile(l:output_file)
+    " Clean up
+    unlet g:claude_last_response
+    unlet g:claude_last_range
+    unlet g:claude_last_is_selection
 
-    " Show response in a new split
-    execute 'botright new'
-    execute 'resize 15'
-    call setline(1, l:response)
-
-    " Set buffer options
-    setlocal buftype=nofile
-    setlocal bufhidden=wipe
-    setlocal noswapfile
-
-    " Clean up temp file
-    call delete(l:output_file)
+    echo "Changes applied!"
 endfunction
 
-" Function to replace selected text with Claude's response
-function! ClaudeReplace(instructions) range
-    " Get the selected text
-    let l:lines = getline(a:firstline, a:lastline)
-    let l:text = join(l:lines, "\n")
+" Function to open Claude Code with current file as context (interactive)
+function! ClaudeWithFile()
+    let l:file = expand('%:p')
 
-    " Create temporary file
-    let l:output_file = tempname()
+    if empty(l:file)
+        call ClaudeOpen()
+        return
+    endif
 
-    " Build the prompt
-    let l:prompt = a:instructions . "\n\nText to modify:\n" . l:text . "\n\nProvide ONLY the modified code without explanations."
+    " Open Claude with file as context
+    let l:cmd = 'claude "' . l:file . '"'
 
-    " Execute Claude command
-    let l:cmd = 'echo ' . shellescape(l:prompt) . ' | claude > ' . l:output_file . ' 2>&1'
-    echo "Asking Claude..."
-    call system(l:cmd)
-
-    " Read the response
-    let l:response = readfile(l:output_file)
-
-    " Replace the selected lines
-    execute a:firstline . ',' . a:lastline . 'delete'
-    call append(a:firstline - 1, l:response)
-
-    " Clean up temp file
-    call delete(l:output_file)
-
-    echo "Done!"
-endfunction
-
-" Function to send current buffer to Claude
-function! ClaudeBuffer(instructions)
-    " Get all lines from buffer
-    let l:lines = getline(1, '$')
-    let l:text = join(l:lines, "\n")
-
-    " Create temporary file
-    let l:output_file = tempname()
-
-    " Build the prompt
-    let l:prompt = a:instructions . "\n\nFile content:\n" . l:text
-
-    " Execute Claude command
-    let l:cmd = 'echo ' . shellescape(l:prompt) . ' | claude > ' . l:output_file . ' 2>&1'
-    call system(l:cmd)
-
-    " Read the response
-    let l:response = readfile(l:output_file)
-
-    " Show response in a new split
-    execute 'botright new'
-    execute 'resize 15'
-    call setline(1, l:response)
-
-    " Set buffer options
-    setlocal buftype=nofile
-    setlocal bufhidden=wipe
-    setlocal noswapfile
-
-    " Clean up temp file
-    call delete(l:output_file)
+    if has('terminal')
+        execute 'botright terminal ++close ++rows=20 ' . l:cmd
+    elseif has('nvim')
+        botright split
+        resize 20
+        execute 'terminal ' . l:cmd
+    else
+        execute '!' . l:cmd
+    endif
 endfunction
 
 " ============================================================================
-" Claude Commands
+" Claude Code Commands
 " ============================================================================
 
-" Execute Claude with a prompt
-command! -nargs=+ Claude call ClaudeExecute(<q-args>)
+" Open Claude Code interactively
+command! Claude call ClaudeOpen()
 
-" Edit selected text with Claude (requires visual selection)
-command! -range -nargs=+ ClaudeEdit <line1>,<line2>call ClaudeEdit(<q-args>)
+" Send current file to Claude with optional prompt
+command! -nargs=* ClaudeFile call ClaudeFile(<f-args>)
 
-" Ask Claude about selected text (requires visual selection)
-command! -range -nargs=+ ClaudeAsk <line1>,<line2>call ClaudeAsk(<q-args>)
+" Send selection to Claude with optional prompt (requires visual selection)
+command! -range -nargs=* ClaudeSelection <line1>,<line2>call ClaudeSelection(<f-args>)
 
-" Replace selected text with Claude's response (requires visual selection)
-command! -range -nargs=+ ClaudeReplace <line1>,<line2>call ClaudeReplace(<q-args>)
+" Run Claude with a specific prompt
+command! -nargs=+ ClaudePrompt call ClaudePrompt(<q-args>)
 
-" Analyze current buffer with Claude
-command! -nargs=+ ClaudeBuffer call ClaudeBuffer(<q-args>)
+" Edit code with Claude (shows result for review)
+command! -range -nargs=* ClaudeEdit <line1>,<line2>call ClaudeEdit(<f-args>)
+
+" Apply the last Claude response
+command! ClaudeApply call ClaudeApply()
+
+" Open Claude with current file as context
+command! ClaudeContext call ClaudeWithFile()
 
 " ============================================================================
-" Claude Mappings
+" Claude Code Mappings
 " ============================================================================
 
-" Quick Claude commands in visual mode
+" Open Claude Code interactively
+nnoremap <Leader>cc :Claude<CR>
+
+" Send current file to Claude
+nnoremap <Leader>cf :ClaudeFile
+
+" Send current file with context (interactive Claude)
+nnoremap <Leader>cx :ClaudeContext<CR>
+
+" Quick Claude prompt
+nnoremap <Leader>cp :ClaudePrompt
+
+" Edit selection with Claude (visual mode)
 vnoremap <Leader>ce :ClaudeEdit
-vnoremap <Leader>ca :ClaudeAsk
-vnoremap <Leader>cr :ClaudeReplace
+vnoremap <Leader>cs :ClaudeSelection
 
-" Quick Claude command
-nnoremap <Leader>c :Claude
-
-" Analyze current buffer
-nnoremap <Leader>cb :ClaudeBuffer
+" Apply last Claude response
+nnoremap <Leader>ca :ClaudeApply<CR>
 
 " ============================================================================
-" Help for Claude commands
+" Help for Claude Code commands
 " ============================================================================
 "
 " Commands:
-"   :Claude <prompt>              - Execute Claude with a prompt
-"   :ClaudeEdit <instructions>    - Edit selected text (visual mode)
-"   :ClaudeAsk <question>         - Ask about selected text (visual mode)
-"   :ClaudeReplace <instructions> - Replace selected text (visual mode)
-"   :ClaudeBuffer <instructions>  - Analyze entire buffer
+"   :Claude                       - Open Claude Code interactively
+"   :ClaudeFile [prompt]          - Send current file to Claude with prompt
+"   :ClaudeContext                - Open Claude with current file as context
+"   :ClaudeSelection [prompt]     - Send selection to Claude (visual mode)
+"   :ClaudePrompt <prompt>        - Run Claude with a specific prompt
+"   :ClaudeEdit [instructions]    - Edit code with Claude (shows for review)
+"   :ClaudeApply                  - Apply the last Claude response
 "
 " Mappings:
-"   <Leader>c                     - Quick Claude command
-"   <Leader>cb                    - Analyze current buffer
-"   (visual) <Leader>ce           - Edit selection
-"   (visual) <Leader>ca           - Ask about selection
-"   (visual) <Leader>cr           - Replace selection
+"   <Leader>cc                    - Open Claude Code interactively
+"   <Leader>cf                    - Send current file to Claude
+"   <Leader>cx                    - Open Claude with file context
+"   <Leader>cp                    - Quick Claude prompt
+"   (visual) <Leader>ce           - Edit selection with Claude
+"   (visual) <Leader>cs           - Send selection to Claude
+"   <Leader>ca                    - Apply last Claude response
 "
-" Examples:
-"   :Claude explain what is vim
-"   (select code) :ClaudeEdit add comments to this code
-"   (select code) :ClaudeAsk what does this code do?
-"   (select code) :ClaudeReplace refactor this to be more efficient
-"   :ClaudeBuffer review this file for potential bugs
+" Workflow Examples:
+"
+"   1. Interactive Claude:
+"      <Leader>cc                 - Opens Claude Code in terminal
+"
+"   2. Ask about current file:
+"      <Leader>cf explain this code
+"      :ClaudeFile what does this file do?
+"
+"   3. Work with Claude interactively with file context:
+"      <Leader>cx                 - Opens Claude with file loaded
+"
+"   4. Edit selection:
+"      (select code) <Leader>ce add comments
+"      (select code) :ClaudeEdit refactor this function
+"      Then review and :ClaudeApply to accept changes
+"
+"   5. Quick question:
+"      <Leader>cp explain async/await in JavaScript
+"
+"   6. Send selection to Claude:
+"      (select code) <Leader>cs explain this
+"
+" Note: Leader key is <Space> by default
 "
 " ============================================================================
