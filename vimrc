@@ -164,7 +164,7 @@ map <Leader>f :find<Space>
 nnoremap <Leader>b :buffer<Space>
 map <Leader>gn :bn<cr>
 map <Leader>gp :bp<cr>
-map <Leader>gd :bd<cr>
+map <Leader>bd :bd<cr>
 
 " Search in files (like Ctrl+Shift+F in VSCode)
 map <Leader>F :grep -R<Space>
@@ -702,7 +702,7 @@ nnoremap <Leader>ga :GitDiffAll<CR>
 " Navigation:
 "   Ctrl+H/J/K/L                  - Navigate between splits
 "   <Leader>gn / <Leader>gp       - Next/Previous buffer
-"   <Leader>gd                    - Close buffer
+"   <Leader>bd                    - Close buffer (buffer delete)
 "   Ctrl+Tab / Ctrl+Shift+Tab     - Next/Previous tab
 "
 " Git Integration:
