@@ -1,5 +1,5 @@
 " ============================================================================
-" VIM Configuration with Claude Code Integration
+" VIM Configuration - VSCode-like Experience
 " ============================================================================
 
 " Leader key
@@ -11,11 +11,23 @@ let mapleader="\<Space>"
 
 " Display
 set number              " Show line numbers
+set relativenumber      " Show relative line numbers (VSCode-like)
 set mouse=a             " Enable mouse support
 set title               " Set terminal title
 set nowrap              " Don't wrap lines
 set cursorline          " Highlight current line
 set showmatch           " Show matching brackets
+set showcmd             " Show partial commands in status line
+set laststatus=2        " Always show status line
+set scrolloff=5         " Keep 5 lines above/below cursor (VSCode-like)
+set sidescrolloff=5     " Keep 5 columns left/right of cursor
+set signcolumn=yes      " Always show sign column (for errors/warnings)
+set colorcolumn=80      " Show column at 80 characters (VSCode-like)
+set display+=lastline   " Show as much as possible of last line
+set lazyredraw          " Don't redraw during macros (faster)
+set showbreak=↪\        " Show wrapped line continuation
+set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set fillchars=fold:-,diff:-
 
 " Indentation
 set tabstop=2           " Tab width
@@ -23,6 +35,9 @@ set shiftwidth=2        " Indent width
 set softtabstop=2       " Soft tab width
 set shiftround          " Round indent to multiple of shiftwidth
 set expandtab           " Use spaces instead of tabs
+set autoindent          " Auto-indent new lines
+set smartindent         " Smart auto-indenting
+set copyindent          " Copy previous indentation
 
 " Search
 set ignorecase          " Ignore case in search
@@ -35,15 +50,36 @@ set hidden              " Allow hidden buffers
 set wildmenu            " Enhanced command-line completion
 set wildmode=list:longest,full
 set path+=**            " Search in subdirectories
+set autowrite           " Auto-save when switching buffers
+set autoread            " Auto-reload files changed outside Vim
+set confirm             " Confirm before quitting with unsaved changes
+set backspace=indent,eol,start  " Make backspace work properly
+set whichwrap+=<,>,h,l  " Allow cursor to wrap lines
+set virtualedit=onemore " Allow cursor one char past end of line
+set undofile            " Persistent undo
+set undodir=~/.vim/undo " Undo directory
+set history=1000         " Command history
+set undolevels=1000     " Undo levels
+set completeopt=menuone,noinsert,noselect  " Better completion menu
+set belloff=all         " Disable bell sounds
+set shortmess+=c        " Don't show completion messages
+set updatetime=300      " Update time for CursorHold (for better performance)
+set timeoutlen=500      " Timeout for key sequences
+set ttimeoutlen=0       " No timeout for terminal key codes
 
 " Folding
 set foldmethod=indent   " Fold based on indentation
-set foldnestmax=1       " Max fold nesting
-set foldlevelstart=1    " Start with folds open
+set foldnestmax=10      " Max fold nesting
+set foldlevelstart=99   " Start with all folds open (VSCode-like)
+set foldcolumn=1        " Show fold column
+set foldopen=all        " Open folds for any command
+set foldclose=all       " Close folds when leaving them
 
 " Splits
 set splitbelow          " Open horizontal splits below
 set splitright          " Open vertical splits to the right
+set equalalways         " Equalize splits when opening/closing windows
+set eadirection=both    " Equalize splits in both directions
 
 " ============================================================================
 " Basic Mappings
@@ -75,7 +111,7 @@ map <Leader>f :find<Space>
 nnoremap <Leader>b :buffer<Space>
 map <Leader>gn :bn<cr>
 map <Leader>gp :bp<cr>
-map <Leader>gd :bd<cr>
+map <Leader>bd :bd<cr>
 
 " Search in files
 map <Leader>F :grep -R<Space>
@@ -132,203 +168,84 @@ nnoremap <Leader>_ <C-w>_
 nnoremap <Leader>\| <C-w>\|
 
 " ============================================================================
-" Claude Code Integration Functions
+" VSCode-like Features
 " ============================================================================
 
-" Function to open Claude Code interactively in terminal
-function! ClaudeOpen()
-    " Check if we have terminal support
-    if has('terminal')
-        " Open Claude in a terminal split
-        botright terminal ++close ++rows=20 claude
-    elseif has('nvim')
-        " Neovim terminal
-        botright split
-        resize 20
-        terminal claude
-    else
-        " Fallback to shell execution
-        !claude
-    endif
-endfunction
+" Auto-create undo directory
+if !isdirectory($HOME . '/.vim/undo')
+    call mkdir($HOME . '/.vim/undo', 'p')
+endif
 
-" Function to send current file to Claude Code
-function! ClaudeFile(...)
-    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Review this file'
-    let l:file = expand('%:p')
+" Better syntax highlighting
+syntax enable
+filetype plugin indent on
 
-    if empty(l:file)
-        echo "No file in current buffer"
-        return
-    endif
+" Better bracket matching
+set matchpairs+=<:>     " Match angle brackets
+set matchtime=1         " Show matching bracket for 0.1 seconds
 
-    " Create command to run claude with file context
-    let l:cmd = 'claude "' . escape(l:prompt, '"') . '" "' . l:file . '"'
+" Better text objects
+onoremap <silent> i/ :<c-u>normal! T/vt/<cr>
+onoremap <silent> a/ :<c-u>normal! F/vf/<cr>
+onoremap <silent> i" :<c-u>normal! T"vt"<cr>
+onoremap <silent> a" :<c-u>normal! F"vf"<cr>
+onoremap <silent> i' :<c-u>normal! T'vt'<cr>
+onoremap <silent> a' :<c-u>normal! F'vf'<cr>
+onoremap <silent> i` :<c-u>normal! T`vt`<cr>
+onoremap <silent> a` :<c-u>normal! F`vf`<cr>
 
-    " Check if we have terminal support
-    if has('terminal')
-        execute 'botright terminal ++close ++rows=20 ' . l:cmd
-    elseif has('nvim')
-        botright split
-        resize 20
-        execute 'terminal ' . l:cmd
-    else
-        execute '!' . l:cmd
-    endif
-endfunction
+" Better selection behavior
+set selection=exclusive  " Don't include character under cursor in selection
+set selectmode=          " Use mouse and key selection
 
-" Function to send selected text to Claude Code
-function! ClaudeSelection(...) range
-    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Explain this code'
+" Visual mode improvements
+vnoremap < <gv            " Keep selection after indent
+vnoremap > >gv            " Keep selection after indent
+vnoremap y ygv<Esc>       " Keep selection after yank
 
-    " Get the selected text
-    let l:lines = getline(a:firstline, a:lastline)
-    let l:text = join(l:lines, "\n")
+" Better navigation
+nnoremap <C-o> <C-o>zz    " Center after jump
+nnoremap <C-i> <C-i>zz    " Center after jump
+nnoremap n nzzzv          " Center search results
+nnoremap N Nzzzv          " Center search results
+nnoremap * *zzzv          " Center search results
+nnoremap # #zzzv          " Center search results
+nnoremap g* g*zzzv        " Center search results
+nnoremap g# g#zzzv        " Center search results
 
-    " Create temporary file with selection
-    let l:temp_file = tempname() . '.txt'
-    call writefile(l:lines, l:temp_file)
+" Better editing
+inoremap <C-c> <Esc>      " Map Ctrl-C to Esc
+nnoremap <Esc><Esc> :nohlsearch<CR>  " Clear search highlighting
 
-    " Create command to run claude with selection
-    let l:cmd = 'claude "' . escape(l:prompt, '"') . '" "' . l:temp_file . '"'
+" Better completion
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
-    " Check if we have terminal support
-    if has('terminal')
-        execute 'botright terminal ++close ++rows=20 ' . l:cmd
-    elseif has('nvim')
-        botright split
-        resize 20
-        execute 'terminal ' . l:cmd
-    else
-        execute '!' . l:cmd
-    endif
-endfunction
+" Auto-close brackets (VSCode-like)
+inoremap { {}<Left>
+inoremap ( ()<Left>
+inoremap [ []<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap ` ``<Left>
 
-" Function to run Claude Code with a specific prompt
-function! ClaudePrompt(prompt)
-    let l:cmd = 'claude "' . escape(a:prompt, '"') . '"'
+" Better file browsing
+let g:netrw_liststyle = 3  " Tree view
+let g:netrw_winsize = 25   " Window size
+let g:netrw_browse_split = 4  " Open in previous window
+let g:netrw_altv = 1       " Open splits to the right
+let g:netrw_preview = 1    " Preview vertical splits
 
-    " Check if we have terminal support
-    if has('terminal')
-        execute 'botright terminal ++close ++rows=20 ' . l:cmd
-    elseif has('nvim')
-        botright split
-        resize 20
-        execute 'terminal ' . l:cmd
-    else
-        execute '!' . l:cmd
-    endif
-endfunction
+" Status line improvements
+set statusline=%<%f\ %h%m%r%w\ %=%{&ff}\ %l,%c%V\ %P
 
-" Function to send current file to Claude and get code back
-function! ClaudeEdit(...) range
-    let l:prompt = a:0 > 0 ? join(a:000, ' ') : 'Refactor this code'
+" Better error display
+set errorformat+=%f:%l:%c:\ %m
 
-    " Get the text (either selection or whole file)
-    if a:firstline != a:lastline || a:firstline != 1
-        " We have a selection
-        let l:lines = getline(a:firstline, a:lastline)
-        let l:is_selection = 1
-    else
-        " Whole file
-        let l:lines = getline(1, '$')
-        let l:is_selection = 0
-    endif
-
-    " Create temporary input file
-    let l:input_file = tempname() . '.txt'
-    call writefile(l:lines, l:input_file)
-
-    " Create temporary output file
-    let l:output_file = tempname() . '.txt'
-
-    " Run claude in non-interactive mode
-    let l:full_prompt = l:prompt . '. Respond with ONLY the code, no explanations.'
-    let l:cmd = 'claude "' . escape(l:full_prompt, '"') . '" "' . l:input_file . '" > "' . l:output_file . '" 2>&1'
-
-    echo "Asking Claude Code..."
-    call system(l:cmd)
-
-    " Check if output file exists and has content
-    if filereadable(l:output_file)
-        let l:response = readfile(l:output_file)
-
-        " Show response in a new split for review
-        botright new
-        resize 15
-        call setline(1, l:response)
-        setlocal buftype=nofile
-        setlocal bufhidden=wipe
-        setlocal noswapfile
-
-        echo "Review the changes. Use :ClaudeApply to apply them."
-
-        " Store the range and response for later use
-        let g:claude_last_response = l:response
-        let g:claude_last_range = [a:firstline, a:lastline]
-        let g:claude_last_is_selection = l:is_selection
-    else
-        echo "Error: No response from Claude Code"
-    endif
-
-    " Clean up temp files
-    call delete(l:input_file)
-endfunction
-
-" Function to apply the last Claude response
-function! ClaudeApply()
-    if !exists('g:claude_last_response')
-        echo "No Claude response to apply"
-        return
-    endif
-
-    " Close the preview window
-    execute 'pclose'
-
-    " Go back to the original window
-    wincmd p
-
-    " Apply the changes
-    if g:claude_last_is_selection
-        " Replace selection
-        execute g:claude_last_range[0] . ',' . g:claude_last_range[1] . 'delete'
-        call append(g:claude_last_range[0] - 1, g:claude_last_response)
-    else
-        " Replace whole file
-        %delete
-        call setline(1, g:claude_last_response)
-    endif
-
-    " Clean up
-    unlet g:claude_last_response
-    unlet g:claude_last_range
-    unlet g:claude_last_is_selection
-
-    echo "Changes applied!"
-endfunction
-
-" Function to open Claude Code with current file as context (interactive)
-function! ClaudeWithFile()
-    let l:file = expand('%:p')
-
-    if empty(l:file)
-        call ClaudeOpen()
-        return
-    endif
-
-    " Open Claude with file as context
-    let l:cmd = 'claude "' . l:file . '"'
-
-    if has('terminal')
-        execute 'botright terminal ++close ++rows=20 ' . l:cmd
-    elseif has('nvim')
-        botright split
-        resize 20
-        execute 'terminal ' . l:cmd
-    else
-        execute '!' . l:cmd
-    endif
-endfunction
+" Auto-save on focus lost (if supported)
+autocmd FocusLost * silent! wall
+autocmd BufLeave * silent! update
 
 " ============================================================================
 " Git Diff Integration Functions
@@ -653,29 +570,30 @@ function! GitDiffAll()
 endfunction
 
 " ============================================================================
-" Claude Code Commands
+" Utility Commands
 " ============================================================================
 
-" Open Claude Code interactively
-command! Claude call ClaudeOpen()
+" Quick fix indentation
+command! FixIndent :normal! gg=G
 
-" Send current file to Claude with optional prompt
-command! -nargs=* ClaudeFile call ClaudeFile(<f-args>)
+" Remove trailing whitespace
+command! TrimWhitespace :%s/\s\+$//e
 
-" Send selection to Claude with optional prompt (requires visual selection)
-command! -range -nargs=* ClaudeSelection <line1>,<line2>call ClaudeSelection(<f-args>)
+" Toggle relative line numbers
+function! ToggleRelativeNumber()
+    if &relativenumber
+        set norelativenumber
+    else
+        set relativenumber
+    endif
+endfunction
+command! ToggleRelNum call ToggleRelativeNumber()
 
-" Run Claude with a specific prompt
-command! -nargs=+ ClaudePrompt call ClaudePrompt(<q-args>)
-
-" Edit code with Claude (shows result for review)
-command! -range -nargs=* ClaudeEdit <line1>,<line2>call ClaudeEdit(<f-args>)
-
-" Apply the last Claude response
-command! ClaudeApply call ClaudeApply()
-
-" Open Claude with current file as context
-command! ClaudeContext call ClaudeWithFile()
+" Better window management
+command! -nargs=1 -complete=file E edit <args>
+command! -nargs=1 -complete=file Sp split <args>
+command! -nargs=1 -complete=file Vsp vsplit <args>
+command! -nargs=1 -complete=file Tab tabedit <args>
 
 " ============================================================================
 " Git Commands
@@ -710,25 +628,38 @@ nnoremap <Leader>gs :GitStatus<CR>
 nnoremap <Leader>ga :GitDiffAll<CR>
 
 " ============================================================================
-" Claude Code Mappings
+" Additional VSCode-like Mappings
 " ============================================================================
-" Note: Using <Leader>ai prefix to avoid conflicts with other plugins
-" (ai = Artificial Intelligence)
 
-" Open Claude Code interactively
-nnoremap <Leader>ai :Claude<CR>
+" Toggle relative line numbers
+nnoremap <Leader>rn :call ToggleRelativeNumber()<CR>
 
-" Send current file with context (interactive Claude)
-nnoremap <Leader>ac :ClaudeContext<CR>
+" Toggle line numbers
+nnoremap <Leader>ln :set number!<CR>
 
-" Edit selection with Claude (visual mode)
-vnoremap <Leader>ae :ClaudeEdit
+" Toggle list (show whitespace)
+nnoremap <Leader>wl :set list!<CR>
 
-" Apply last Claude response
-nnoremap <Leader>aa :ClaudeApply<CR>
+" Toggle wrap
+nnoremap <Leader>wr :set wrap!<CR>
 
-" Alternative: You can also just use the commands directly:
-" :Claude, :ClaudeContext, :ClaudeFile, :ClaudeSelection, :ClaudePrompt, :ClaudeEdit, :ClaudeApply
+" Format current file
+nnoremap <Leader>ff :FixIndent<CR>
+
+" Remove trailing whitespace
+nnoremap <Leader>tw :TrimWhitespace<CR>
+
+" Better quickfix navigation
+nnoremap <Leader>cn :cnext<CR>
+nnoremap <Leader>cp :cprev<CR>
+nnoremap <Leader>co :copen<CR>
+nnoremap <Leader>cc :cclose<CR>
+
+" Better location list navigation
+nnoremap <Leader>lln :lnext<CR>
+nnoremap <Leader>llp :lprev<CR>
+nnoremap <Leader>llo :lopen<CR>
+nnoremap <Leader>llc :lclose<CR>
 
 " ============================================================================
 " Help - Git Integration
@@ -764,33 +695,12 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 "   zo                            - Open fold
 "   zc                            - Close fold
 "
-" Workflow Examples:
-"
-"   Example 1 - View specific file changes:
-"     1. Edit a file that's tracked by git
-"     2. Press <Leader>gd to see changes side-by-side
-"        - Left side: HEAD version (read-only)
-"        - Right side: Your changes (editable)
-"     3. Navigate between changes with ]c and [c
-"     4. Press <Leader>gq to close diff view
-"
-"   Example 2 - Browse all changes (NEW!):
-"     1. Open vim without a file (or run :GitDiff with no file)
-"     2. Press <Leader>gd to see list of changed files
-"     3. Use j/k to navigate to a file
-"     4. Press Enter to view that file's diff
-"     5. Press <Leader>gq to close diff
-"     6. Repeat to view other files
-"
-"   Example 3 - Quick status check:
-"     1. Press <Leader>gs to see git status anytime
-"
 " ============================================================================
 " Help - Terminal and Split Management
 " ============================================================================
 "
 " Terminal Scrolling:
-"   When in Claude terminal, press Esc Esc to enter Normal mode
+"   When in terminal, press Esc Esc to enter Normal mode
 "   Then you can:
 "     - Use j/k or arrow keys to scroll
 "     - Use Ctrl-u/Ctrl-d for page up/down
@@ -808,50 +718,26 @@ nnoremap <Leader>aa :ClaudeApply<CR>
 "   Ctrl-w >/<                    - Resize split width
 "
 " ============================================================================
-" Help - Claude Code Commands
+" Help - VSCode-like Features
 " ============================================================================
 "
-" Commands:
-"   :Claude                       - Open Claude Code interactively
-"   :ClaudeFile [prompt]          - Send current file to Claude with prompt
-"   :ClaudeContext                - Open Claude with current file as context
-"   :ClaudeSelection [prompt]     - Send selection to Claude (visual mode)
-"   :ClaudePrompt <prompt>        - Run Claude with a specific prompt
-"   :ClaudeEdit [instructions]    - Edit code with Claude (shows for review)
-"   :ClaudeApply                  - Apply the last Claude response
+" Line Numbers:
+"   <Leader>rn                    - Toggle relative line numbers
+"   <Leader>ln                    - Toggle line numbers
 "
-" Mappings:
-"   <Leader>ai                    - Open Claude Code interactively
-"   <Leader>ac                    - Open Claude with file context
-"   (visual) <Leader>ae           - Edit selection with Claude
-"   <Leader>aa                    - Apply last Claude response
+" Display:
+"   <Leader>wl                    - Toggle whitespace display
+"   <Leader>wr                    - Toggle line wrap
 "
-" Note: Most commands are better used directly via :Command syntax
+" Editing:
+"   <Leader>ff                    - Format current file (fix indentation)
+"   <Leader>tw                    - Remove trailing whitespace
 "
-" Workflow Examples:
-"
-"   1. Interactive Claude:
-"      :Claude                    - Opens Claude Code in terminal
-"      <Leader>ai                 - Same as above (shortcut)
-"
-"   2. Ask about current file:
-"      :ClaudeFile what does this file do?
-"      :ClaudeFile explain this code
-"
-"   3. Work with Claude interactively with file context:
-"      :ClaudeContext             - Opens Claude with file loaded
-"      <Leader>ac                 - Same as above (shortcut)
-"
-"   4. Edit selection:
-"      (select code) :ClaudeEdit add comments
-"      (select code) <Leader>ae add comments
-"      Then review and :ClaudeApply (or <Leader>aa) to accept changes
-"
-"   5. Quick question:
-"      :ClaudePrompt explain async/await in JavaScript
-"
-"   6. Send selection to Claude:
-"      (select code) :ClaudeSelection explain this
+" Quickfix/Location List:
+"   <Leader>cn/cp                 - Next/Previous in quickfix
+"   <Leader>co/cc                 - Open/Close quickfix
+"   <Leader>lln/llp              - Next/Previous in location list
+"   <Leader>llo/llc              - Open/Close location list
 "
 " Note: Leader key is <Space> by default
 "
