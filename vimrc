@@ -185,6 +185,40 @@ autocmd FileType vim nnoremap <Leader>/ :s/^/" /<CR>:nohlsearch<CR>
 autocmd FileType vim vnoremap <Leader>/ :s/^/" /<CR>:nohlsearch<CR>
 
 " ============================================================================
+" Terminal Integration - VSCode Style
+" ============================================================================
+
+" Open terminal in horizontal split (like Ctrl+` in VSCode)
+nnoremap <Leader>tt :botright split \| resize 15 \| terminal<CR>
+
+" Open terminal in vertical split
+nnoremap <Leader>tv :botright vsplit \| terminal<CR>
+
+" Terminal mode mappings for vim
+if has('terminal')
+    " Exit terminal mode with Esc Esc
+    tnoremap <Esc><Esc> <C-W>N
+    " Quick window navigation from terminal mode
+    tnoremap <C-h> <C-w>h
+    tnoremap <C-j> <C-w>j
+    tnoremap <C-k> <C-w>k
+    tnoremap <C-l> <C-w>l
+endif
+
+" Terminal mode mappings for neovim
+if has('nvim')
+    " Exit terminal mode with Esc Esc
+    tnoremap <Esc><Esc> <C-\><C-n>
+    " Quick window navigation from terminal mode
+    tnoremap <C-h> <C-\><C-n><C-w>h
+    tnoremap <C-j> <C-\><C-n><C-w>j
+    tnoremap <C-k> <C-\><C-n><C-w>k
+    tnoremap <C-l> <C-\><C-n><C-w>l
+    " Start terminal in insert mode
+    autocmd TermOpen * startinsert
+endif
+
+" ============================================================================
 " VSCode-like Status Line
 " ============================================================================
 
@@ -717,6 +751,12 @@ nnoremap <Leader>ga :GitDiffAll<CR>
 "   <Leader>=                     - Equalize all splits
 "   <Leader>_                     - Maximize vertically
 "   <Leader>|                     - Maximize horizontally
+"
+" Terminal:
+"   <Leader>tt                    - Open terminal (horizontal split)
+"   <Leader>tv                    - Open terminal (vertical split)
+"   Esc Esc (in terminal)         - Exit terminal mode
+"   Ctrl+H/J/K/L (in terminal)    - Navigate from terminal to other windows
 "
 " Other:
 "   <Leader><Space>               - Clear search highlighting
