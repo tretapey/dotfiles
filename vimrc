@@ -94,6 +94,47 @@ filetype plugin indent on
 syntax enable
 
 " ============================================================================
+" Filetype Detection for Additional Languages
+" ============================================================================
+
+" Custom filetype associations for modern web frameworks and languages
+augroup filetypedetect
+  autocmd!
+  " Svelte files (uses HTML syntax as base)
+  autocmd BufNewFile,BufRead *.svelte set filetype=html syntax=html
+
+  " TypeScript React
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
+
+  " TypeScript
+  autocmd BufNewFile,BufRead *.ts set filetype=typescript
+
+  " JSX
+  autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
+
+  " Vue files
+  autocmd BufNewFile,BufRead *.vue set filetype=html syntax=html
+
+  " Markdown variants
+  autocmd BufNewFile,BufRead *.md,*.markdown set filetype=markdown
+
+  " YAML
+  autocmd BufNewFile,BufRead *.yml,*.yaml set filetype=yaml
+
+  " JSON
+  autocmd BufNewFile,BufRead *.json set filetype=json
+
+  " Docker
+  autocmd BufNewFile,BufRead Dockerfile*,*.dockerfile set filetype=dockerfile
+
+  " Terraform
+  autocmd BufNewFile,BufRead *.tf,*.tfvars set filetype=terraform
+
+  " Go templates
+  autocmd BufNewFile,BufRead *.gotmpl,*.tmpl set filetype=gotmpl
+augroup END
+
+" ============================================================================
 " Enhanced Mappings - VSCode Style
 " ============================================================================
 
