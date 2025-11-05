@@ -11,7 +11,6 @@ let mapleader="\<Space>"
 
 " Display
 set number              " Show line numbers
-set relativenumber      " Relative line numbers (like VSCode with relative line numbers)
 set mouse=a             " Enable mouse support
 set title               " Set terminal title
 set nowrap              " Don't wrap lines
@@ -215,7 +214,7 @@ nnoremap <Leader><Space> :nohlsearch<CR>
 nnoremap <Esc> :nohlsearch<CR><Esc>
 
 " Toggle line numbers
-nnoremap <Leader>n :set number! relativenumber!<CR>
+nnoremap <Leader>n :set number!<CR>
 
 " Quick comment toggle (basic version)
 autocmd FileType javascript,typescript,c,cpp,java,rust nnoremap <Leader>/ :s/^/\/\/ /<CR>:nohlsearch<CR>

@@ -415,7 +415,7 @@ Ctrl+X Ctrl+N    " Keywords
 
 ### Display Settings
 
-- ✅ Line numbers + relative numbers
+- ✅ Line numbers
 - ✅ Sign column always visible (for git markers, etc.)
 - ✅ Current line highlighted
 - ✅ Current column highlighted
