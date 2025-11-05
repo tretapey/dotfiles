@@ -439,6 +439,33 @@ Custom status line showing:
 
 Uses terminal colors - customize your terminal theme for best results.
 
+### Syntax Highlighting
+
+Built-in syntax highlighting for modern web frameworks and languages:
+
+**Web Frameworks:**
+- ✅ `.svelte` - Svelte components (HTML syntax)
+- ✅ `.vue` - Vue.js components (HTML syntax)
+- ✅ `.jsx` - React JavaScript
+- ✅ `.tsx` - React TypeScript
+
+**Languages:**
+- ✅ `.ts` - TypeScript
+- ✅ `.js` - JavaScript
+- ✅ `.py` - Python
+- ✅ `.html` - HTML
+- ✅ `.css` - CSS
+
+**Configuration Files:**
+- ✅ `.json` - JSON
+- ✅ `.yml`, `.yaml` - YAML
+- ✅ `.md`, `.markdown` - Markdown
+- ✅ `Dockerfile` - Docker
+- ✅ `.tf`, `.tfvars` - Terraform
+- ✅ `.gotmpl`, `.tmpl` - Go templates
+
+All file types automatically detect and apply appropriate syntax highlighting.
+
 ---
 
 ## 💾 Advanced Features
