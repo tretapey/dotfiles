@@ -231,9 +231,6 @@ endfunction
 " Auto Commands - VSCode Behaviors
 " ============================================================================
 
-" Auto-save on focus lost
-autocmd FocusLost * silent! wa
-
 " Return to last edit position when opening files
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
