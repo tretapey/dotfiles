@@ -4,6 +4,16 @@ Starting my list of dotfiles and others
 
 ## Files and Instructions
 
+### neovim
+
+Install neovim
+
+Copy the `nvim` into `~/.config` and enjoy
+
+For grep search you need to have installed ripgrep `brew install ripgrep` for macos
+
+#### ---- DEPRECATED ---
+
 ### vimrc (dotfile)
 
 Install VIM with your package manager.
